@@ -28,7 +28,7 @@ contract EtherWallet {
     function getBalance() external view returns (uint) {
         // return contract balance
         return address(this).balance;
-        // return eth deposit via receive function only (not by contract destruction)
+        // return eth deposit via receive function only (not by contract self-destruction)
         // return balance;
     }
 
@@ -36,7 +36,7 @@ contract EtherWallet {
         require(msg.sender == owner, "Not the owner");
         require(_amount <= address(this).balance, "Not enough ETH available in contract");
 
-        balance -= _amount;
+        balance = address(this).balance - _amount;
 
         (bool sent, bytes memory data) = owner.call{value: _amount}("");
         require(sent, "Failed to send Ether");
